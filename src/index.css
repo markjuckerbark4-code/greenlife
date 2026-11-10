@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
+    color: #1e293b;
+    background-color: #ffffff;
+    overflow-x: hidden;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #22c55e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #15803d;
+}
