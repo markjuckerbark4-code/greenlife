@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { COMPANY_CONTACT } from '../data/architectData';
+import { useAdminData } from '../context/AdminDataContext';
 import { Phone, Mail, MapPin, Send, CheckCircle2, Clock } from 'lucide-react';
 
 export const GetInTouch: React.FC = () => {
+  const { addInquiry, companyContact } = useAdminData();
   const [formData, setFormData] = useState({
     title: 'Mr.',
     fullName: '',
@@ -19,10 +20,18 @@ export const GetInTouch: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    addInquiry({
+      fullName: `${formData.title} ${formData.fullName}`,
+      phone: formData.phone,
+      email: formData.email,
+      location: formData.location || 'Dhaka',
+      floors: formData.floors,
+      message: formData.message,
+    });
     setTimeout(() => {
       setSubmitting(false);
       setSubmitted(true);
-    }, 800);
+    }, 500);
   };
 
   return (
@@ -59,7 +68,7 @@ export const GetInTouch: React.FC = () => {
                   Thank You, {formData.title} {formData.fullName || 'Valued Client'}!
                 </h4>
                 <p className="text-sm text-emerald-800 max-w-md mx-auto leading-relaxed">
-                  Your inquiry regarding <strong className="font-bold">{formData.floors}</strong> construction at <strong className="font-bold">{formData.location || 'your location'}</strong> has been received. Our team will contact you at <span className="font-semibold">{formData.phone || COMPANY_CONTACT.phoneDisplay}</span>.
+                  Your inquiry regarding <strong className="font-bold">{formData.floors}</strong> construction at <strong className="font-bold">{formData.location || 'your location'}</strong> has been received. Our team will contact you at <span className="font-semibold">{formData.phone || companyContact.phoneDisplay}</span>.
                 </p>
                 <button
                   onClick={() => {
@@ -223,10 +232,10 @@ export const GetInTouch: React.FC = () => {
                       Helpline / WhatsApp
                     </span>
                     <a
-                      href={`tel:${COMPANY_CONTACT.phone}`}
+                      href={`tel:${companyContact.phone}`}
                       className="font-bold text-slate-900 hover:text-emerald-700 text-base"
                     >
-                      {COMPANY_CONTACT.phoneDisplay}
+                      {companyContact.phoneDisplay}
                     </a>
                   </div>
                 </div>
@@ -241,10 +250,10 @@ export const GetInTouch: React.FC = () => {
                       Official Inquiries
                     </span>
                     <a
-                      href={`mailto:${COMPANY_CONTACT.email}`}
+                      href={`mailto:${companyContact.email}`}
                       className="font-semibold text-slate-800 hover:text-emerald-700 text-sm"
                     >
-                      {COMPANY_CONTACT.email}
+                      {companyContact.email}
                     </a>
                   </div>
                 </div>
@@ -259,7 +268,7 @@ export const GetInTouch: React.FC = () => {
                       Dhaka Head Office
                     </span>
                     <p className="text-slate-800 font-medium text-xs leading-relaxed">
-                      {COMPANY_CONTACT.headOffice}
+                      {companyContact.headOffice}
                     </p>
                   </div>
                 </div>
@@ -274,7 +283,7 @@ export const GetInTouch: React.FC = () => {
                       Regional Branch Office
                     </span>
                     <p className="text-slate-800 font-medium text-xs leading-relaxed">
-                      {COMPANY_CONTACT.branchOffice}
+                      {companyContact.branchOffice}
                     </p>
                   </div>
                 </div>
@@ -282,7 +291,7 @@ export const GetInTouch: React.FC = () => {
                 {/* Hours */}
                 <div className="flex items-start gap-3 pt-2 border-t border-emerald-200/60 text-xs text-slate-600">
                   <Clock className="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
-                  <span>{COMPANY_CONTACT.workingHours}</span>
+                  <span>{companyContact.workingHours}</span>
                 </div>
               </div>
             </div>

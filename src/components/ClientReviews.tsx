@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { CLIENT_REVIEWS } from '../data/architectData';
+import { useAdminData } from '../context/AdminDataContext';
 import { Quote, Star } from 'lucide-react';
 
 export const ClientReviews: React.FC = () => {
+  const { reviews } = useAdminData();
   const [activeReviewIdx, setActiveReviewIdx] = useState(0);
-  const currentReview = CLIENT_REVIEWS[activeReviewIdx];
+  const currentReview = reviews[activeReviewIdx] || reviews[0];
 
   return (
     <section className="py-16 lg:py-24 bg-slate-50/70 border-t border-slate-200/80">
@@ -104,7 +105,7 @@ export const ClientReviews: React.FC = () => {
 
                 {/* Navigation Dots below text */}
                 <div className="flex items-center gap-2">
-                  {CLIENT_REVIEWS.map((review, i) => (
+                  {reviews.map((review, i) => (
                     <button
                       key={review.id}
                       onClick={() => setActiveReviewIdx(i)}

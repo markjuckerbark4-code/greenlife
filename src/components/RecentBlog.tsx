@@ -1,5 +1,6 @@
 import React from 'react';
-import { BLOG_POSTS, BlogPost } from '../data/architectData';
+import { BlogPost } from '../data/architectData';
+import { useAdminData } from '../context/AdminDataContext';
 import { ArrowRight, BookOpen } from 'lucide-react';
 
 interface RecentBlogProps {
@@ -8,6 +9,8 @@ interface RecentBlogProps {
 }
 
 export const RecentBlog: React.FC<RecentBlogProps> = ({ onReadArticle, onViewAllBlogs }) => {
+  const { blogs } = useAdminData();
+
   return (
     <section id="blog" className="py-16 lg:py-24 bg-white border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -24,7 +27,7 @@ export const RecentBlog: React.FC<RecentBlogProps> = ({ onReadArticle, onViewAll
 
         {/* 3 Side-by-Side Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-10">
-          {BLOG_POSTS.map((post) => (
+          {blogs.slice(0, 3).map((post) => (
             <div
               key={post.id}
               className="bg-white rounded-xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group"

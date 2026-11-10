@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FEATURED_PROJECTS, ProjectVideo, COMPANY_CONTACT } from '../data/architectData';
+import { ProjectVideo } from '../data/architectData';
+import { useAdminData } from '../context/AdminDataContext';
 import { Play, Youtube, ExternalLink, ArrowRight } from 'lucide-react';
 
 interface FeaturedProjectsProps {
@@ -7,6 +8,7 @@ interface FeaturedProjectsProps {
 }
 
 export const FeaturedProjects: React.FC<FeaturedProjectsProps> = ({ onOpenProjectModal }) => {
+  const { projects, companyContact } = useAdminData();
   const [activeDot, setActiveDot] = useState(0);
 
   return (
@@ -25,7 +27,7 @@ export const FeaturedProjects: React.FC<FeaturedProjectsProps> = ({ onOpenProjec
 
         {/* Grid of YouTube Video Thumbnails with Bengali Overlay */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-          {FEATURED_PROJECTS.map((project, idx) => (
+          {projects.map((project, idx) => (
             <div
               key={project.id}
               className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200 transition-all duration-300 flex flex-col group"
@@ -114,7 +116,7 @@ export const FeaturedProjects: React.FC<FeaturedProjectsProps> = ({ onOpenProjec
         {/* Large Green CTA Button: "Lets Take A Tour To Our YouTube Channel" (as in screenshot) */}
         <div className="text-center">
           <a
-            href={COMPANY_CONTACT.youtubeChannel}
+            href={companyContact.youtubeChannel}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-98 text-white font-bold text-sm sm:text-base px-8 py-3.5 rounded-md shadow-md hover:shadow-lg transition-all"

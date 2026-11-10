@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, Phone, User, MapPin, X, CheckCircle2 } from 'lucide-react';
+import { useAdminData } from '../context/AdminDataContext';
 import { COMPANY_CONTACT } from '../data/architectData';
 
 interface ScheduleModalProps {
@@ -13,6 +14,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
   onClose,
   initialNote = '',
 }) => {
+  const { addAppointment } = useAdminData();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -29,6 +31,15 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    addAppointment({
+      name: formData.name,
+      phone: formData.phone,
+      date: formData.date,
+      timeSlot: formData.timeSlot,
+      service: formData.service,
+      meetingType: formData.meetingType,
+      notes: formData.notes,
+    });
     setIsSuccess(true);
   };
 

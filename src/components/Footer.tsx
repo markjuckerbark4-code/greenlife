@@ -1,5 +1,5 @@
 import React from 'react';
-import { COMPANY_CONTACT } from '../data/architectData';
+import { useAdminData } from '../context/AdminDataContext';
 import { Logo } from './Logo';
 import { Phone, Mail, MapPin } from 'lucide-react';
 
@@ -7,9 +7,16 @@ interface FooterProps {
   onNavigate: (sectionId: string) => void;
   onOpenPrivacy: () => void;
   onOpenTerms: () => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy, onOpenTerms }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onNavigate,
+  onOpenPrivacy,
+  onOpenTerms,
+  onOpenAdmin,
+}) => {
+  const { companyContact } = useAdminData();
   const quickLinks = [
     { label: 'Home', target: 'hero' },
     { label: 'Services', target: 'services' },
@@ -64,6 +71,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy, onOpe
               >
                 Terms And Conditions
               </button>
+              {onOpenAdmin && (
+                <button
+                  onClick={onOpenAdmin}
+                  className="text-left text-emerald-800 font-bold hover:text-emerald-950 transition-colors py-1 cursor-pointer flex items-center gap-1"
+                >
+                  <span>🔐 Admin Portal</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -76,31 +91,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy, onOpe
               <div className="flex items-start gap-2.5">
                 <Phone className="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
                 <a
-                  href={`tel:${COMPANY_CONTACT.phone}`}
+                  href={`tel:${companyContact.phone}`}
                   className="font-bold text-slate-900 hover:text-emerald-700"
                 >
-                  {COMPANY_CONTACT.phoneDisplay}
+                  {companyContact.phoneDisplay}
                 </a>
               </div>
 
               <div className="flex items-start gap-2.5">
                 <Mail className="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
                 <a
-                  href={`mailto:${COMPANY_CONTACT.email}`}
+                  href={`mailto:${companyContact.email}`}
                   className="hover:text-emerald-700"
                 >
-                  {COMPANY_CONTACT.email}
+                  {companyContact.email}
                 </a>
               </div>
 
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
-                <span>{COMPANY_CONTACT.headOffice}</span>
+                <span>{companyContact.headOffice}</span>
               </div>
 
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-emerald-700 flex-shrink-0 mt-0.5" />
-                <span>{COMPANY_CONTACT.branchOffice}</span>
+                <span>{companyContact.branchOffice}</span>
               </div>
             </div>
           </div>
@@ -136,7 +151,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenPrivacy, onOpe
             </a>
             {/* YouTube */}
             <a
-              href={COMPANY_CONTACT.youtubeChannel}
+              href={companyContact.youtubeChannel}
               target="_blank"
               rel="noreferrer"
               aria-label="YouTube"

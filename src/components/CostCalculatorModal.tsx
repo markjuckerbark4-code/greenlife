@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calculator, X, Check, Building, ArrowRight, ShieldCheck, Info } from 'lucide-react';
+import { useAdminData } from '../context/AdminDataContext';
 
 interface CostCalculatorModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ export const CostCalculatorModal: React.FC<CostCalculatorModalProps> = ({
   onClose,
   onBookConsultation,
 }) => {
+  const { addCalculatorLead } = useAdminData();
   const [landUnit, setLandUnit] = useState<'katha' | 'decimal' | 'sqft'>('katha');
   const [landValue, setLandValue] = useState<number>(3.5);
   const [floors, setFloors] = useState<number>(5);
@@ -273,6 +275,15 @@ export const CostCalculatorModal: React.FC<CostCalculatorModalProps> = ({
 
             <button
               onClick={() => {
+                addCalculatorLead({
+                  landSize: `${landValue} ${landUnit}`,
+                  floors,
+                  finishQuality: `${finishQuality} (${effectiveRate}/sqft)`,
+                  foundationType,
+                  builtUpSqft: totalBuiltUpSqft,
+                  estimatedCostBDT: `৳ ${totalCostCrore} Crore`,
+                  clientNote: summaryString,
+                });
                 onClose();
                 onBookConsultation(summaryString);
               }}

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ServicesSection } from './components/ServicesSection';
@@ -24,10 +24,72 @@ import { BlogModal } from './components/BlogModal';
 import { GlanceModal } from './components/GlanceModal';
 import { ServiceCatalogModal } from './components/ServiceCatalogModal';
 import { ProjectVideo, BlogPost } from './data/architectData';
+import { AdminDataProvider } from './context/AdminDataContext';
+import { AdminLayout } from './admin/AdminLayout';
+import { AdminLogin } from './admin/AdminLogin';
 import { Heart, Briefcase, Info, X } from 'lucide-react';
 
 export default function App() {
-  // Modal states
+  return (
+    <AdminDataProvider>
+      <MainAppContent />
+    </AdminDataProvider>
+  );
+}
+
+function MainAppContent() {
+  // Routing state for /admin
+  const checkIsAdmin = () => {
+    if (typeof window === 'undefined') return false;
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    return (
+      path === '/admin' ||
+      path.startsWith('/admin/') ||
+      hash === '#/admin' ||
+      hash.startsWith('#/admin') ||
+      window.location.search.includes('admin=true')
+    );
+  };
+
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(checkIsAdmin);
+  const [isAdminAuth, setIsAdminAuth] = useState<boolean>(() => {
+    return localStorage.getItem('ga_admin_authenticated') === 'true';
+  });
+
+  // Listen to browser URL navigation events (back/forward or URL changes)
+  useEffect(() => {
+    const handleUrlChange = () => {
+      setIsAdminRoute(checkIsAdmin());
+    };
+
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
+  }, []);
+
+  const navigateToAdmin = () => {
+    window.history.pushState(null, '', '/admin');
+    setIsAdminRoute(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToWebsite = () => {
+    window.history.pushState(null, '', '/');
+    setIsAdminRoute(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('ga_admin_authenticated');
+    setIsAdminAuth(false);
+  };
+
+  // Public Website Modal states
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [scheduleNote, setScheduleNote] = useState('');
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
@@ -133,6 +195,25 @@ export default function App() {
     setIsScheduleOpen(true);
   };
 
+  // If on /admin route:
+  if (isAdminRoute) {
+    if (!isAdminAuth) {
+      return (
+        <AdminLogin
+          onLoginSuccess={() => setIsAdminAuth(true)}
+          onBackToWebsite={navigateToWebsite}
+        />
+      );
+    }
+    return (
+      <AdminLayout
+        onBackToWebsite={navigateToWebsite}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  // Otherwise, render Public Website
   return (
     <div className="min-h-screen bg-white text-slate-800 flex flex-col selection:bg-emerald-500 selection:text-white">
       {/* Header */}
@@ -140,6 +221,7 @@ export default function App() {
         onScheduleCall={() => handleOpenScheduleWithNote()}
         onOpenCalculator={() => setIsCalculatorOpen(true)}
         onNavigate={handleNavigate}
+        onOpenAdmin={navigateToAdmin}
       />
 
       {/* Main Page Flow */}
@@ -231,6 +313,7 @@ export default function App() {
             ),
           })
         }
+        onOpenAdmin={navigateToAdmin}
       />
 
       {/* Floating Action Buttons (Red Phone on left, Green WhatsApp on right) */}

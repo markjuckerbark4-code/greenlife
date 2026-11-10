@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Menu, X, Calculator, Calendar } from 'lucide-react';
+import { Mail, Phone, MapPin, Menu, X, Calculator, Calendar, Shield } from 'lucide-react';
 import { COMPANY_CONTACT } from '../data/architectData';
 import { Logo } from './Logo';
 
@@ -7,12 +7,14 @@ interface HeaderProps {
   onScheduleCall: () => void;
   onOpenCalculator: () => void;
   onNavigate: (sectionId: string) => void;
+  onOpenAdmin?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onScheduleCall,
   onOpenCalculator,
   onNavigate,
+  onOpenAdmin,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -123,6 +125,17 @@ export const Header: React.FC<HeaderProps> = ({
                 </svg>
               </a>
             </div>
+
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="text-slate-500 hover:text-emerald-700 text-xs font-semibold px-2 py-1 rounded transition-colors flex items-center gap-1 cursor-pointer"
+                title="Open Admin Portal (/admin)"
+              >
+                <Shield className="w-3 h-3 text-emerald-600" />
+                <span>Admin</span>
+              </button>
+            )}
 
             <button
               onClick={onScheduleCall}

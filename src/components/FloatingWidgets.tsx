@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Phone, MessageCircle, X } from 'lucide-react';
-import { COMPANY_CONTACT } from '../data/architectData';
+import { useAdminData } from '../context/AdminDataContext';
 
 interface FloatingWidgetsProps {
   onScheduleCall: () => void;
 }
 
 export const FloatingWidgets: React.FC<FloatingWidgetsProps> = ({ onScheduleCall }) => {
+  const { companyContact } = useAdminData();
   const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(false);
 
   return (
@@ -14,10 +15,10 @@ export const FloatingWidgets: React.FC<FloatingWidgetsProps> = ({ onScheduleCall
       {/* Floating Red Phone Button on Bottom Left */}
       <div className="fixed bottom-6 left-6 z-40 flex items-center gap-2">
         <a
-          href={`tel:${COMPANY_CONTACT.phone}`}
+          href={`tel:${companyContact.phone}`}
           className="relative group w-13 h-13 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-2xl transition-transform hover:scale-110 active:scale-95 cursor-pointer ring-4 ring-red-400/30"
           aria-label="Direct Phone Call"
-          title={`Call ${COMPANY_CONTACT.phoneDisplay}`}
+          title={`Call ${companyContact.phoneDisplay}`}
         >
           <span className="absolute -inset-1 rounded-full bg-red-500 animate-ping opacity-35 pointer-events-none" />
           <Phone className="w-6 h-6 fill-current animate-pulse" />
